@@ -36,7 +36,7 @@ author:
   type      : # "person" (default), "organization"
   name      : aqueidumpling
   url       :
-  avatar    : "/assets/imges/avatar.svg" # path or url of avatar image (square)
+  avatar    : "/assets/images/avatar.svg" # path or url of avatar image (square)
   
   bio       : a former sociology researcher, and a newbee in football and video games
   email     :
