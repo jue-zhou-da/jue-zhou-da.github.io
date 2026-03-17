@@ -27,6 +27,16 @@ layout: base
   source0=layout.comment source1=page.comment -%}
 {%- assign _comment = __return -%}
 
+{%- include snippets/assign.html
+  target = site.data.variables.default.page.search
+  source0=layout.search source1=page.search -%}
+{%- assign _search = __return -%}
+
+{%- assign _show_search = false -%}
+{%- if _search != false and site.search.provider -%}
+  {%- assign _show_search = true -%}
+{%- endif -%}
+
 
 {%- assign _article_header_excerpt_truncate = include.excerpt_truncate | default: 200 -%}
 
@@ -233,20 +243,32 @@ layout: base
   </div> {%- comment -%} end page__viewport {%- endcomment -%}
 {%- endif -%}
 
+{%- assign _need_modal = false -%}
+{%- if _lightbox == true or (_header != false and _show_search) -%}
+  {%- assign _need_modal = true -%}
+{%- endif -%}
+{%- if _need_modal -%}
 <script>{%- include scripts/lib/modal.js -%}</script>
+{%- endif -%}
 {%- if _lightbox == true -%}
   <div class="modal d-print-none js-page-gallery-modal"><div class="gallery"></div></div>
 {%- endif -%}
-{%- if _header != false -%}
+{%- if _header != false and _show_search -%}
   <div class="modal modal--overflow page__search-modal d-print-none js-page-search-modal">{%- include search.html -%}</div>
 {%- endif -%}
 </div>
 
 
 <script>
-  {%- include scripts/lib/scroll-to.js -%}
-  {%- include scripts/lib/affix.js -%}
-  {%- include scripts/lib/toc.js -%}
+  {%- if _page_type == 'article' or (page.aside and page.aside.toc) -%}
+    {%- include scripts/lib/scroll-to.js -%}
+  {%- endif -%}
+  {%- if page.aside -%}
+    {%- include scripts/lib/affix.js -%}
+    {%- if page.aside.toc -%}
+      {%- include scripts/lib/toc.js -%}
+    {%- endif -%}
+  {%- endif -%}
   {%- if _lightbox == true -%}
     {%- include scripts/lib/gallery.js -%}
     {%- include scripts/components/lightbox.js -%}
